@@ -1,0 +1,13 @@
+{
+  "name": "tna",
+  "version": "0.0.2",
+  "description": "Transaction Nucleic Acid",
+  "main": "index.js",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bitcoincashjs": "^0.1.10",
+    "bitcoind-rpc": "^0.7.2",
+    "dotenv": "^6.0.0"
+  }
+}
