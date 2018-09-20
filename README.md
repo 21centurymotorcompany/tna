@@ -4,6 +4,8 @@ TNA translates raw bitcoin transaction into bitdb document format, which allows 
 
 ![protein](./protein.png)
 
+TNA can be used as a standalone tool for quickly making sense of bitcoin raw transactions, and also powers [bitd](https://github.com/21centurymotorcompany/bitd) which stores the transformed format into MongoDB to form the basis of [BitDB](https://bitdb.network).
+
 # Installation
 
 ```
@@ -15,7 +17,7 @@ npm install --save tna
 There are two methods:
 
 1. **fromHash:** Generates bitdb document from transaction hash. (requires a local bitcoin node for JSON-RPC)
-2. **fromtx:** Generates bitdb document from raw transaction (Local operation and doesn't require a bitcoin node)
+2. **fromTx:** Generates bitdb document from raw transaction (Local operation and doesn't require a bitcoin node)
 
 ## 1. fromHash
 
