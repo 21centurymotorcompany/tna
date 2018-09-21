@@ -25,15 +25,13 @@ var fromTx = function(transaction, options) {
     let gene = new bch.Transaction(transaction);
     let t = gene.toObject()
     let result = [];
-    let senders = []
-    let receivers = [];
     let inputs = [];
     let outputs = [];
     let graph = {};
     if (gene.inputs) {
       gene.inputs.forEach(function(input, input_index) {
         if (input.script) {
-          let xput = { index: input_index }
+          let xput = { i: input_index }
           input.script.chunks.forEach(function(c, chunk_index) {
             let chunk = c;
             if (c.buf) {
@@ -42,20 +40,25 @@ var fromTx = function(transaction, options) {
                 xput["h" + chunk_index] = c.buf.toString('hex')
               }
             } else {
-              xput["b" + chunk_index] = c;
+              if (typeof c.opcodenum !== 'undefined') {
+                xput["b" + chunk_index] = {
+                  op: c.opcodenum
+                }
+              } else {
+                xput["b" + chunk_index] = c;
+              }
             }
           })
           xput.str = input.script.inspect()
           let sender = {
-            tx: input.prevTxId.toString('hex'),
-            index: input.outputIndex
+            h: input.prevTxId.toString('hex'),
+            i: input.outputIndex
           }
           let address = input.script.toAddress(bch.Networks.livenet).toString(bch.Address.CashAddrFormat).split(':')[1];
           if (address && address.length > 0) {
             sender.a = address;
           }
-          xput.sender = sender;
-          senders.push(sender)
+          xput.e = sender;
           inputs.push(xput)
         }
       })
@@ -63,7 +66,7 @@ var fromTx = function(transaction, options) {
     if (gene.outputs) {
       gene.outputs.forEach(function(output, output_index) {
         if (output.script) {
-          let xput = { index: output_index }
+          let xput = { i: output_index }
           output.script.chunks.forEach(function(c, chunk_index) {
             let chunk = c;
             if (c.buf) {
@@ -73,28 +76,33 @@ var fromTx = function(transaction, options) {
                 xput["h" + chunk_index] = c.buf.toString('hex')
               }
             } else {
-              xput["b" + chunk_index] = c;
+              if (typeof c.opcodenum !== 'undefined') {
+                xput["b" + chunk_index] = {
+                  op: c.opcodenum
+                }
+              } else {
+                xput["b" + chunk_index] = c;
+              }
             }
           })
           xput.str = output.script.inspect()
           let receiver = {
             v: output.satoshis,
-            index: output_index
+            i: output_index
           }
           let address = output.script.toAddress(bch.Networks.livenet).toString(bch.Address.CashAddrFormat).split(':')[1];
           if (address && address.length > 0) {
             receiver.a = address;
           }
-          xput.receiver = receiver;
-          receivers.push(receiver)
+          xput.e = receiver;
           outputs.push(xput)
         }
       })
     }
     resolve({
-      tx: { hash: t.hash },
-      input: inputs,
-      output: outputs
+      tx: { h: t.hash },
+      in: inputs,
+      out: outputs
     })
   })
 }
