@@ -1,14 +1,21 @@
 require('dotenv').config()
 const bch = require('bitcoincashjs')
-var fromHash = function(hash) {
-  const RpcClient = require('bitcoind-rpc');
-  const rpc = new RpcClient({
-    protocol: 'http',
-    user: process.env.BITCOIN_USERNAME ? process.env.BITCOIN_USERNAME : 'root',
-    pass: process.env.BITCOIN_PASSWORD ? process.env.BITCOIN_PASSWORD : 'bitcoin',
-    host: process.env.BITCOIN_IP ? process.env.BITCOIN_IP : '127.0.0.1',
-    port: process.env.BITCOIN_PORT ? process.env.BITCOIN_PORT : '8332',
-  })
+const RpcClient = require('bitcoind-rpc');
+var fromHash = function(hash, config) {
+  let c;
+  if (config) {
+    c = config;
+  } else {
+    c = {
+      protocol: 'http',
+      user: process.env.BITCOIN_USERNAME ? process.env.BITCOIN_USERNAME : 'root',
+      pass: process.env.BITCOIN_PASSWORD ? process.env.BITCOIN_PASSWORD : 'bitcoin',
+      host: process.env.BITCOIN_IP ? process.env.BITCOIN_IP : '127.0.0.1',
+      port: process.env.BITCOIN_PORT ? process.env.BITCOIN_PORT : '8332',
+    }
+  }
+  
+  const rpc = new RpcClient(c)
   return new Promise(function(resolve, reject) {
     rpc.getRawTransaction(hash, async function(err, transaction) {
       if (err) {
