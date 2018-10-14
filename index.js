@@ -56,7 +56,7 @@ var fromTx = function(transaction, options) {
               }
             }
           })
-          xput.str = input.script.inspect()
+          xput.str = input.script.toASM()
           let sender = {
             h: input.prevTxId.toString('hex'),
             i: input.outputIndex
@@ -92,7 +92,7 @@ var fromTx = function(transaction, options) {
               }
             }
           })
-          xput.str = output.script.inspect()
+          xput.str = output.script.toASM()
           let receiver = {
             v: output.satoshis,
             i: output_index
